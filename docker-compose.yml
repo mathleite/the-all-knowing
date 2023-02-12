@@ -1,0 +1,24 @@
+version: '3.9'
+services:
+  test: &default
+    image: the-all-knowing:dev
+    build:
+      context: .
+      target: dev
+    command: sh -c 'npx jest --coverage'
+    volumes:
+      - .:/app
+    working_dir: /app
+    environment:
+      - OPENAI_API_KEY=your_key_here
+      - DISCORD_BOT_TOKEN=bot_token_here
+      - DISCORD_BOT_ID=bot_id_here
+      - DISCORD_SERVER_ID=server_id_here
+
+  app:
+    <<: *default
+    command: sh -c 'npx nodemon ./src/main.ts'
+
+  command-deploy:
+    <<: *default
+    command: sh -c 'npx ts-node ./src/deploy-commands.ts'
